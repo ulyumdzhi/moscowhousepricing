@@ -1,0 +1,7 @@
+gunicorn
+flask
+folium
+requests
+joblib
+sklearn
+haversine

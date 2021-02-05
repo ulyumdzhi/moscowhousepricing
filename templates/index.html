@@ -1,0 +1,46 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title> Узнать стоимость </title>
+<style>
+Body {
+  font-family: Calibri, Helvetica, sans-serif;
+  background-color: pink;
+}
+button {
+       background-color: #4CAF50;
+       width: 100%;
+        color: black;
+        padding: 15px;
+        margin: 10px 0px;
+        border: none;
+        cursor: pointer;
+         }
+ form {
+        border: 3px solid #f1f1f1;
+    }
+ input[type=text], input[type=number] {
+        width: 100%;
+        margin: 8px 0;
+        padding: 12px 20px;
+        display: inline-block;
+        border: 2px solid green;
+        box-sizing: border-box;
+    }
+
+</style>
+
+</head>
+<body>
+    <center> <h1>{{header}}</h1> </center>
+    <form method="POST">
+        <div class="container">
+            <label>Твой адрес где-то в Москве: </label>
+            <input type="text" placeholder="{{not_mos}}3-я улица Строителей, 22к8" name="address" required>
+            <label>Площадь: </label>
+            <input type="number" min=20 max=100 value=42 placeholder="Введи площадь квартиры, например: 42" name="area" required>
+            <button type="submit">Узнать стоимость</button>
+        </div>
+    </form>
+</body>
+</html>
