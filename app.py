@@ -1,17 +1,16 @@
-from flask import Flask, request, jsonify, render_template, url_for
 import folium
-import math
-import requests
-import joblib
 
+from flask import Flask, request, jsonify, render_template
 from haversine import haversine
-from sklearn.ensemble import GradientBoostingRegressor
+from folium.plugins import MarkerCluster
+from folium.features import DivIcon
 
-from functions import get_coords, moscow_price
+from functions import get_coords, price_predict
 
 app = Flask(__name__)
 
 # Static texts
+DEFAULT_TEXT = 'Расстояние до Кремля и ориентировочная стоимость аренды:'
 HEADER_INIT_TEXT = 'Хэллоу, бой! Давай узнаем сколько стоит снять твою берлогу!'
 HEADER_TEXT_2CLOSE = 'Уоуоу, бой! Подальше от Кремля, плиз!'
 HEADER_TEXT_FARFARAWAY = 'оуоуоуоуоуоуоу, бой! Адрес московский укажи, плиз!'
@@ -52,7 +51,30 @@ def route_price():
 
             # Resulting map
             else:
-                return moscow_price(distance, area, lat, long)
+                cost = price_predict(distance, area, lat, long)
+
+                # Preparing data for the map
+                cost_str = ' %s  ₽' % cost
+                dist_str = ' %s км' % distance
+
+                start_coords = (lat, long)
+                world_map = folium.Map(location=start_coords, zoom_start=16)
+                marker_cluster = MarkerCluster().add_to(world_map)
+                radius = 10
+
+                # html variables for folium marker
+                html_base = '<div style="font-size: 20pt; height: 200px; width: 400px; background:#4CAF50">'
+                html_vars = DEFAULT_TEXT+dist_str+' и'+cost_str+'</div>'
+
+                folium.map.Marker([lat, long], icon=DivIcon(
+                    icon_size=(150,36),
+                    icon_anchor=(0,0),
+                    html=html_base+html_vars
+                    )).add_to(world_map)
+                folium.Marker(location = [lat, long], radius=radius, popup=[DEFAULT_TEXT+dist_str+cost_str], fill =True).add_to(marker_cluster)
+
+                # Result map assemble
+                return world_map._repr_html_(), 200
 
 
 if __name__ == '__main__':
