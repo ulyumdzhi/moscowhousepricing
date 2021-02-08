@@ -4,7 +4,7 @@ import folium
 
 from sklearn.ensemble import GradientBoostingRegressor
 
-YANDEX = '301d8157-1143-4ec9-95aa-73d51f27bdb8'
+YANDEX = '<your-yandex-api-key>'
 
 clf = joblib.load('regressor.joblib')
 
